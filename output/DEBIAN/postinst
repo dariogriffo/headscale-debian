@@ -1,0 +1,40 @@
+#!/bin/bash
+set -e
+
+# Create headscale group if it doesn't exist
+if ! getent group headscale > /dev/null 2>&1; then
+    addgroup --system headscale
+fi
+
+# Create headscale user if it doesn't exist
+if ! id -u headscale > /dev/null 2>&1; then
+    adduser --system --shell /usr/sbin/nologin --gecos 'headscale' \
+        --ingroup headscale --disabled-password --home /var/lib/headscale headscale
+fi
+
+# Create data directory
+if [ ! -d /var/lib/headscale ]; then
+    mkdir -p /var/lib/headscale
+fi
+chown headscale:headscale /var/lib/headscale
+chmod 750 /var/lib/headscale
+
+# Config directory ships with the package; make sure ownership/permissions
+# are right even on upgrades
+if [ -d /etc/headscale ]; then
+    chown root:headscale /etc/headscale
+    chmod 750 /etc/headscale
+    [ -f /etc/headscale/config.yaml ] && chown root:headscale /etc/headscale/config.yaml && chmod 640 /etc/headscale/config.yaml || true
+fi
+
+# Reload systemd so the new service file is recognized
+if command -v systemctl > /dev/null 2>&1 && systemctl is-system-running --quiet 2>/dev/null; then
+    systemctl daemon-reload || true
+fi
+
+echo "headscale installed. To complete setup:"
+echo "  1. Review /etc/headscale/config.yaml"
+echo "  2. Start the service: sudo systemctl start headscale"
+echo "  3. Enable on boot: sudo systemctl enable headscale"
+
+exit 0

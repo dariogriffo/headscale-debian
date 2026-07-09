@@ -1,0 +1,31 @@
+#!/usr/bin/make -f
+DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+HEADSCALE_VERSION := $(shell dpkg-parsechangelog -S Version | sed 's/[-~].*//')
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+
+override_dh_auto_build:
+	@arch="$(DEB_HOST_ARCH)"; \
+	case "$$arch" in \
+		amd64) HEADSCALE_RELEASE="headscale_$(HEADSCALE_VERSION)_linux_amd64" ;; \
+		arm64) HEADSCALE_RELEASE="headscale_$(HEADSCALE_VERSION)_linux_arm64" ;; \
+		*) echo "Unsupported architecture: $$arch"; exit 1 ;; \
+	esac; \
+	echo "Downloading $$HEADSCALE_RELEASE..."; \
+	wget -q "https://github.com/juanfont/headscale/releases/download/v$(HEADSCALE_VERSION)/$$HEADSCALE_RELEASE" -O headscale; \
+	chmod +x headscale
+
+override_dh_auto_install:
+	install -D -m 755 headscale debian/headscale/usr/bin/headscale
+
+override_dh_auto_test:
+
+override_dh_auto_clean:
+	rm -f headscale
+
+override_dh_strip:
+
+override_dh_shlibdeps:

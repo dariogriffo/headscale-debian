@@ -1,0 +1,16 @@
+Source: headscale
+Section: net
+Priority: optional
+Maintainer: Dario Griffo <dariogriffo@gmail.com>
+Build-Depends: debhelper-compat (= 13), wget, ca-certificates
+Standards-Version: 4.6.2
+Homepage: https://github.com/juanfont/headscale
+Rules-Requires-Root: no
+
+Package: headscale
+Architecture: amd64 arm64
+Depends: ${misc:Depends}, adduser
+Description: An open source, self-hosted implementation of the Tailscale control server
+ Headscale is an open source, self-hosted implementation of the Tailscale
+ control server, providing a coordination server for Tailscale-based
+ networks.

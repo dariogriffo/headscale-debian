@@ -18,6 +18,12 @@ Currently supported Debian distros are:
 - Forky (v14)
 - Sid (testing)
 
+Currently supported Ubuntu distros are:
+- Jammy
+- Noble
+- Questing
+- Resolute
+
 **Upstream architectures:** amd64 and arm64 only (upstream also publishes its own .deb for these two architectures).
 
 This is an unofficial community project to provide a package that's easy to
@@ -44,34 +50,49 @@ sudo apt install -y headscale
 ```sh
 sudo dpkg -i <filename>.deb
 ```
+## Post-installation
+
+After installing the package, complete the headscale setup:
+
+1. Review the configuration at `/etc/headscale/config.yaml`.
+2. Start the service:
+   ```sh
+   sudo systemctl start headscale
+   ```
+3. Enable it on boot:
+   ```sh
+   sudo systemctl enable headscale
+   ```
+
+The package automatically:
+- Creates the `headscale` system user and group
+- Creates `/var/lib/headscale` (state directory, owned by `headscale:headscale`, mode `750`)
+- Ships `/etc/headscale/config.yaml` (owned by `root:headscale`, mode `640`)
+- Installs the systemd service file
+
 ## Updating
 
 To update to a new version, just follow any of the installation methods above. There's no need to uninstall the old version; it will be updated correctly.
 
 ## Building
 
-**Status: not implemented yet.** The build scripts in this repository are currently stubs
-(see `build.sh`, `build_debian.sh`, `build_ubuntu.sh`, `build_src.sh`) and will exit
-non-zero until the headscale packaging logic is implemented.
-
 ### Build for single architecture
 ```sh
 ./build.sh <headscale_version> <build_version> <architecture>
-# Example: ./build.sh 1.2.3 1 arm64
+# Example: ./build.sh 0.29.2 1 arm64
 ```
 
 ### Build for all architectures
 ```sh
 ./build.sh <headscale_version> <build_version> all
-# Example: ./build.sh 1.2.3 1 all
+# Example: ./build.sh 0.29.2 1 all
 ```
 
 ## Roadmap
 
-- [ ] Implement build scripts (headscale is not yet packaged)
-- [ ] Produce a .deb package on GitHub Releases
+- [x] Produce a .deb package on GitHub Releases
 - [ ] Set up a debian mirror for easier updates
-- [ ] Multi-architecture support (amd64, arm64)
+- [x] Multi-architecture support (amd64, arm64)
 
 ## Disclaimer
 
