@@ -71,7 +71,7 @@ build_architecture() {
     declare -a arr=("bookworm" "trixie" "forky" "sid")
 
     for dist in "${arr[@]}"; do
-        FULL_VERSION="$headscale_VERSION-${BUILD_VERSION}+${dist}_${build_arch}"
+        FULL_VERSION="$headscale_VERSION-${BUILD_VERSION}~${dist}_${build_arch}"
         echo "  Building $FULL_VERSION"
 
         if ! docker build . -t "headscale-$dist-$build_arch" \
