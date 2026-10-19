@@ -1,4 +1,4 @@
-headscale (FULL_VERSION) DIST; urgency=low
+headscale (FULL_VERSION) stable; urgency=low
 
   * Package headscale headscale_VERSION for Debian/Ubuntu.
 

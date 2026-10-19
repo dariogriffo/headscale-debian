@@ -1,7 +1,5 @@
-ARG DEBIAN_DIST=bookworm
 FROM debian:bookworm
 
-ARG DEBIAN_DIST
 ARG headscale_VERSION
 ARG BUILD_VERSION
 ARG FULL_VERSION
@@ -24,10 +22,8 @@ COPY output/copyright /output/usr/share/doc/headscale/copyright
 COPY output/changelog.Debian /output/usr/share/doc/headscale/changelog.Debian
 COPY output/README.md /output/usr/share/doc/headscale/README.md
 
-RUN sed -i "s/DIST/$DEBIAN_DIST/" /output/usr/share/doc/headscale/changelog.Debian
 RUN sed -i "s/FULL_VERSION/$FULL_VERSION/" /output/usr/share/doc/headscale/changelog.Debian
 RUN sed -i "s/headscale_VERSION/$headscale_VERSION/g" /output/usr/share/doc/headscale/changelog.Debian
-RUN sed -i "s/DIST/$DEBIAN_DIST/" /output/DEBIAN/control
 RUN sed -i "s/headscale_VERSION/$headscale_VERSION/" /output/DEBIAN/control
 RUN sed -i "s/BUILD_VERSION/$BUILD_VERSION/" /output/DEBIAN/control
 RUN sed -i "s/SUPPORTED_ARCHITECTURES/$ARCH/" /output/DEBIAN/control
@@ -36,4 +32,4 @@ RUN chmod 755 /output/usr/bin/headscale
 RUN chmod 755 /output/DEBIAN/postinst
 RUN chmod 755 /output/DEBIAN/prerm
 
-RUN dpkg-deb --build /output /headscale_${FULL_VERSION}.deb
+RUN dpkg-deb -Zxz --build /output /headscale_${FULL_VERSION}.deb
